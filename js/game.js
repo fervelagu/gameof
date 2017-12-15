@@ -4,6 +4,9 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+var ancho = canvas.width;
+var alto = canvas.height;
+
 //build grid with arrays
 var grid = new Array(ancho);
 
@@ -17,7 +20,7 @@ for (var x = 0; x < ancho; x++){
     }
 }
 
-//copy grid
+//copy grid for update
 function copyGrid() {
     var newGrid = new Array(ancho);
 
@@ -30,7 +33,23 @@ function copyGrid() {
             newGrid[x][y] = grid[x][y];
         }
     }
+    return newGrid;
+}
+
+// stablish random position of the cells
+function position(x, y){
+
+}
+
+//play game
+function playGame(){
+    //
+}
+
+// stop game
+function stopGame(){
+    //
 }
 
 ctx.fillStyle = "#FF0000";
-//ctx.fillRect(x,y,width,height);
+ctx.fillRect(x,y,width,height);
