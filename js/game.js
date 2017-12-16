@@ -107,25 +107,39 @@ function updateGrid() {
             }
         }
     }
+
+    // Game loop
+    function tick() {
+        drawGrid();   
+        updateGrid();   
+        requestAnimationFrame(tick);    
+    }
+    var myInterval;
     
-//play game
-function playGame(){
-    //
-}
+    //play game
+    function playGame(){
+        myInterval = setInterval(function(){
+            updateGrid();
+            drawGrid();
+            },50)
+    }
 
-// stop game
-function stopGame(){
-    //
-}
+    // stop game
+    function stopGame(){
+        clearInterval(myInterval);
+    }
 
-function drawGrid(){
-    ctx.clearRect(0, 0, 400, 400);
-    for (var y = 1; y < alto; y++) { 
-        for (var x = 1; x < ancho; x++) {
-            if (grid[x][y] === 1) {
-                ctx.fillStyle = "#FF0000";
-                ctx.fillRect(x*10,y*10,10,10);
+    function drawGrid(){
+        ctx.clearRect(0, 0, 400, 400);
+        for (var y = 1; y < alto; y++) { 
+            for (var x = 1; x < ancho; x++) {
+                if (grid[x][y] === 1) {
+                    ctx.fillStyle = "#FF0000";
+                    ctx.fillRect(x*10,y*10,10,10);
+                }
             }
         }
     }
-}
+
+    randomFill();
+    drawGrid();
