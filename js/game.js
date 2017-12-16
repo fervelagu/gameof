@@ -21,14 +21,14 @@ for (var x = 0; x < ancho; x++){
 
 //copy grid for update
 function copyGrid() {
-    var newGrid = new Array(ancho);
+    var newGrid = new Array(40);
 
-    for (var i = 0; i < ancho; i++){
+    for (var i = 0; i < 40; i++){
         newGrid[i] = new Array (alto);
     }
 
-    for (var x = 0; x < ancho; x++){
-        for (var y = 0; y < alto; y++){
+    for (var x = 0; x < 40; x++){
+        for (var y = 0; y < 40; y++){
             newGrid[x][y] = grid[x][y];
         }
     }
@@ -37,8 +37,8 @@ function copyGrid() {
 
 // stablish random position of the cells
 function randomFill(){
-    for (var y = 0; y < alto; y++) {
-        for (var x = 0; x < ancho; x++) { 
+    for (var y = 0; y < 40; y++) {
+        for (var x = 0; x < 40; x++) { 
             var ranNum = Math.random(); 
             var improvedNum = (ranNum * 2); 
             var randomBinary = Math.floor(improvedNum);
@@ -51,6 +51,63 @@ function randomFill(){
     }  
 }
 
+//Update grid
+function updateGrid() {
+    mirrorGrid = copyGrid();
+       for (var x = 1; x < 40 - 1; x++) {
+           for (var y = 1; y < 40 - 1; y++) {
+               var totalCells = 0;
+
+               totalCells += grid[x - 1][y - 1]; //top left
+               totalCells += grid[x - 1][y]; //top center
+               totalCells += grid[x - 1][y + 1]; //top right
+               totalCells += grid[x][y - 1]; //middle left
+               totalCells += grid[x][y + 1]; //middle right
+               totalCells += grid[x + 1][y - 1]; //bottom left
+               totalCells += grid[x + 1][y]; //bottom center
+               totalCells += grid[x + 1][y + 1]; //bottom right
+
+               //apply the rules to each cell
+               if (grid[x][y] === 0) {
+                   switch (totalCells) {
+                       case 3:
+                       mirrorGrid[x][y] = 1; //if cell is dead and has 3 neighbours, live
+                       break;
+                       default:
+                       mirrorGrid[x][y] = 0; //leave it dead
+                    }
+                } else if (grid[x][y] === 1) { //apply rules to living cell
+                    switch (totalCells) {
+                        case 0:
+                        case 1:
+                        mirrorGrid[x][y] = 0; //die of loneliness
+                        break;
+                        case 2:
+                        case 3:
+                        mirrorGrid[x][y] = 1; //keep living
+                        break;
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        mirrorGrid[x][y] = 0; //die of overcrowding
+                        break;
+                        default:
+                        mirrorGrid[x][y] = 0; //
+                    }
+                }
+            }
+        }
+
+    //copy mirrorGrid to grid
+        for (var x = 0; x < 40; x++) { //rows
+            for     (var y = 0; y < 40; y++) { //columns
+                grid[x][y] = mirrorGrid[x][y];
+            }
+        }
+    }
+    
 //play game
 function playGame(){
     //
@@ -67,7 +124,7 @@ function drawGrid(){
         for (var x = 1; x < ancho; x++) {
             if (grid[x][y] === 1) {
                 ctx.fillStyle = "#FF0000";
-                ctx.fillRect(x,y,3,3);
+                ctx.fillRect(x*10,y*10,10,10);
             }
         }
     }
